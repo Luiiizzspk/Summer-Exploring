@@ -9,6 +9,33 @@ const mostraIdade = () =>{
     span.innerText = campoIdade.value
 }
 
+var dataAtual = new Date
+const mostraData = ()=> {
+  let dia = dataAtual.getDay()
+  let mes = dataAtual.getMonth()+1
+  let ano = dataAtual.getFullYear()
+  let hora = dataAtual.getHours()
+  let valor = dia +'/'+ mes + '/' + ano + ' - ' + hora
+
+  document.getElementById('dt-cadastro').value = valor
+}
+
+//Preenche o select "estado" com os estados da API do IBGE
+const getEstados = ()=>{
+  let api = 'https://servicodados.ibge.gov.br/api/v1/localidades/estados'
+  let select = document.getElementById('estado')
+
+  // Lê a API através do fetch(),  1o then captura os dados, 2o then trata os dados 
+  fetch(api).then(resposta => resposta.json()).then(json => {
+    let options = '<option>Selecione</option>'
+    
+    select.innerHTML = options
+  })
+
+   
+}
+
+
 
 /*---------------------------------------------------------------------------*/
 
@@ -18,29 +45,28 @@ const mostraIdade = () =>{
 
 /* //////////////// eventos e execuxões automaticas ////////////// */
 
-/*aviso('tenha um bom dia Dave')
-document.getElementById('nome').addEventListener('click', function(){
-    aviso('Ola mundo!! Este é o planeta Terra??')
-})*/
+getEstados()
 
 mostraIdade()
 document.getElementById('idade').addEventListener('change', mostraIdade)
 
+mostraData()
 //Inicializa animçoes scroll do AOS 
 
 AOS.init();
 
 
-// Example starter JavaScript for disabling form submissions if there are invalid fields
-(() => {
+// Impede o envio do formulario quando os campos estao invalidos 
+(()=> {
     'use strict'
   
-    // Fetch all the forms we want to apply custom Bootstrap validation styles to
+    // váriavel captura as tags <form> que contem a classe "needs-validation"
     const forms = document.querySelectorAll('.needs-validation')
   
-    // Loop over them and prevent submission
+    // Executa para ada formulário da variável forms
     Array.from(forms).forEach(form => {
       form.addEventListener('submit', event => {
+        //se houver campos invalidos, interrompe o submit
         if (!form.checkValidity()) {
           event.preventDefault()
           event.stopPropagation()
